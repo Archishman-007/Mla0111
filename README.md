@@ -1,71 +1,94 @@
 ## BFS
-Start with an empty queue and visited set
-Insert the start node into the queue
-Mark the start node as visited
-While queue is not empty:
-Remove front node
-If it is goal → stop
-Else add all unvisited neighbors to queue
-Mark them as visited
-End
+BFS(Graph, start, goal):
+    create empty queue Q
+    create empty set Visited
+    enqueue start into Q
+    add start to Visited
+    while Q is not empty:
+        node = dequeue from Q
+        if node == goal:
+            return SUCCESS
+        for each neighbor of node:
+            if neighbor not in Visited:
+                add neighbor to Visited
+                enqueue neighbor into Q
+    return FAILURE
+    
 ## DFS
-Start with an empty stack and visited set
-Push start node onto stack
-While stack is not empty:
-Pop top node
-If not visited:
-Mark as visited
-Process node
-Push all unvisited neighbors onto stack
-End
+SDFS(Graph, start, goal):
+    create empty stack S
+    create empty set Visited
+    push start into S
+    while S is not empty:
+        node = pop from S
+        if node == goal:
+            return SUCCESS
+        if node not in Visited:
+            add node to Visited
+            for each neighbor of node:
+                push neighbor into S
+    return FAILURE
+    
 ## Water jug problem
-Represent state as (x, y)
-Initialize queue with (0, 0)
-Mark as visited
-While queue is not empty:
-Remove current state
-If goal achieved → stop
-Generate all possible states:
-Fill jug1
-Fill jug2
-Empty jug1
-Empty jug2
-Pour jug1 → jug2
-Pour jug2 → jug1
-Add unvisited states to queue
-End
+WaterJug(x, y, z):
+    create queue Q
+    create set Visited
+    enqueue (0, 0) into Q
+    while Q is not empty:
+        (a, b) = dequeue
+        if (a == z) or (b == z):
+            return SUCCESS
+        if (a, b) not in Visited:
+            add (a, b) to Visited
+            enqueue (x, b)        
+            enqueue (a, y)        
+            enqueue (0, b)       
+            enqueue (a, 0)        
+            enqueue pour(a → b)
+            enqueue pour(b → a)
+    return FAILURE
+    
 ## UCS
-nitialize priority queue with (cost=0, start node)
-Create a visited set
-While queue is not empty:
-Remove node with lowest cost
-If it is goal → return solution
-If not visited:
-Mark visited
-Add all neighbors with updated cost
-End
+UCS(Graph, start, goal):
+    create priority queue PQ
+    insert (0, start) into PQ   // cost, node
+    create empty set Visited
+    while PQ is not empty:
+        (cost, node) = remove node with smallest cost
+        if node == goal:
+            return cost
+        if node not in Visited:
+            add node to Visited
+            for each neighbor of node:
+                new_cost = cost + edge_cost
+                insert (new_cost, neighbor) into PQ
+    return FAILURE
+    
 ## A*Search 
-Initialize priority queue with:
-
-f(n) = g(n) + h(n)
-Insert start node with f(n)
-While queue is not empty:
-Remove node with lowest f(n)
-If goal reached → stop
-Else:
-Expand neighbors
-Compute:
-g(n) = path cost
-h(n) = heuristic
-f(n) = g(n) + h(n)
-Add to queue
-End
+A*(Graph, start, goal):
+    create priority queue PQ
+    insert (f(start), start) into PQ
+    g(start) = 0
+    while PQ is not empty:
+        node = remove node with lowest f(n)
+        if node == goal:
+            return SUCCESS
+        for each neighbor of node:
+            g_new = g(node) + cost(node, neighbor)
+            f_new = g_new + h(neighbor)
+            insert (f_new, neighbor) into PQ
+            
 ## GBFS
-nitialize priority queue with heuristic value h(n)
-Insert start node
-While queue is not empty:
-Remove node with lowest h(n)
-If goal reached → stop
-Else:
-Add neighbors to queue
-End
+GBFS(Graph, start, goal):
+    create priority queue PQ
+    insert (h(start), start) into PQ
+    create empty set Visited
+    while PQ is not empty:
+        node = remove node with lowest h(n)
+        if node == goal:
+            return SUCCESS
+        add node to Visited
+        for each neighbor of node:
+            if neighbor not in Visited:
+                insert (h(neighbor), neighbor) into PQ
+    return FAILURE
